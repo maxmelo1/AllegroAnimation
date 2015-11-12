@@ -9,50 +9,35 @@
 const int LARGURA_TELA = 640;
 const int ALTURA_TELA = 480;
 
-bool initialize(ALLEGRO_DISPLAY *);
+bool initialize(ALLEGRO_DISPLAY *, ALLEGRO_EVENT_QUEUE *);
+void drawScenario();
 
 int main(int argc, char *argv[]){
     ALLEGRO_DISPLAY *janela = NULL;
+    ALLEGRO_EVENT_QUEUE *eventQueue = NULL;
 
-    if (!initialize(janela))
+    if (!initialize(janela, eventQueue))
     {
         return -1;
     }
 
-	// Linha: x1, y1, x2, y2, cor, espessura
-    al_draw_line(20.0, 40.0, 40.0, 60.0, al_map_rgb(255, 0, 0), 1.0);
-    al_flip_display();
+    //drawScenario();
 
-    al_rest(2.0);
- 
-    al_clear_to_color(al_map_rgb(0, 0, 0));
-    al_flip_display();
+    printf("janela = null: %d\n", janela == NULL );
 
-    al_rest(0.5);
- 
-    // Triângulo: x1, y1, x2, y2, x3, y3, cor, espessura
-    al_draw_triangle(70.0, 30.0, 20.0, 55.0, 110.0, 250.0, al_map_rgb(255, 255, 255), 5.0);
-    al_flip_display();
 
-    al_rest(2.0);
- 
-    al_clear_to_color(al_map_rgb(0, 0, 0));
-    al_flip_display();
- 
-    al_rest(0.5);
- 
-    // Triângulo preenchido: x1, y1, x2, y2, x3, y3, cor
-    al_draw_filled_triangle(40.0, 90.0, 120.0, 246.0, 400.0, 23.0, al_map_rgb(255, 255, 0));
-    al_flip_display();
+    al_register_event_source(eventQueue, al_get_display_event_source(janela));
+    al_register_event_source(eventQueue, al_get_keyboard_event_source()); ///Tell allegro to get events from the keyboard
 
-    al_rest(5.0);
+    printf("olar\n");
+
  
     al_destroy_display(janela);
  
     return 0;
 }
 
-bool initialize(ALLEGRO_DISPLAY *janela){
+bool initialize(ALLEGRO_DISPLAY *janela, ALLEGRO_EVENT_QUEUE *eventQueue){
 	if (!al_init())
     {
         fprintf(stderr, "Falha ao inicializar a biblioteca Allegro.\n");
@@ -72,7 +57,28 @@ bool initialize(ALLEGRO_DISPLAY *janela){
         return false;
     }
  
-    al_set_window_title(janela, "Testando allegro_primitives");
- 
+    //al_set_window_title(janela, "Testando allegro_primitives");
+
+    eventQueue = al_create_event_queue();
+    if (!eventQueue)
+    {
+        fprintf(stderr, "Falha ao criar fila de eventos.\n");
+        al_destroy_display(janela);
+        return -1;
+    }
+
+    if(!al_install_keyboard()) ///setup the keyboard
+    {
+        fprintf(stderr, "Failed to install keyboard.\n");
+        //return -1;
+        exit(-1);
+    }
+    printf("j3anela = null: %d\n", janela == NULL );
+
     return true;
+}
+
+void drawScenario(){
+    al_draw_line(0.0, 100.0, 640.0, 100.0, al_map_rgb(255,0,0), 1.0 );
+    al_flip_display();
 }
