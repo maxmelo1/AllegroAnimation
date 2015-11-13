@@ -9,27 +9,43 @@
 const int LARGURA_TELA = 640;
 const int ALTURA_TELA = 480;
 
-bool initialize(ALLEGRO_DISPLAY *, ALLEGRO_EVENT_QUEUE *);
+bool initialize(ALLEGRO_DISPLAY **, ALLEGRO_EVENT_QUEUE **);
 void drawScenario();
 
 int main(int argc, char *argv[]){
     ALLEGRO_DISPLAY *janela = NULL;
     ALLEGRO_EVENT_QUEUE *eventQueue = NULL;
+    bool run = 1;
 
-    if (!initialize(janela, eventQueue))
+    if (!initialize(&janela, &eventQueue))
     {
         return -1;
     }
 
-    //drawScenario();
-
-    printf("janela = null: %d\n", janela == NULL );
+    drawScenario();
 
 
     al_register_event_source(eventQueue, al_get_display_event_source(janela));
     al_register_event_source(eventQueue, al_get_keyboard_event_source()); ///Tell allegro to get events from the keyboard
 
-    printf("olar\n");
+    while(run){
+        ALLEGRO_EVENT event;
+        al_wait_for_event(eventQueue, &event);
+        
+        if(event.type == ALLEGRO_EVENT_KEY_DOWN) ///look for keyboard events
+        {
+            if(event.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+                printf("oi");
+                run = false;
+            }
+        }
+
+
+        if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+        {
+            run = false;
+        }
+    }
 
  
     al_destroy_display(janela);
@@ -37,7 +53,7 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-bool initialize(ALLEGRO_DISPLAY *janela, ALLEGRO_EVENT_QUEUE *eventQueue){
+bool initialize(ALLEGRO_DISPLAY **janela, ALLEGRO_EVENT_QUEUE **eventQueue){
 	if (!al_init())
     {
         fprintf(stderr, "Falha ao inicializar a biblioteca Allegro.\n");
@@ -50,8 +66,8 @@ bool initialize(ALLEGRO_DISPLAY *janela, ALLEGRO_EVENT_QUEUE *eventQueue){
         return false;
     }
  
-    janela = al_create_display(LARGURA_TELA, ALTURA_TELA);
-    if (!janela)
+    *janela = al_create_display(LARGURA_TELA, ALTURA_TELA);
+    if (!*janela)
     {
         fprintf(stderr, "Falha ao criar janela.\n");
         return false;
@@ -59,11 +75,11 @@ bool initialize(ALLEGRO_DISPLAY *janela, ALLEGRO_EVENT_QUEUE *eventQueue){
  
     //al_set_window_title(janela, "Testando allegro_primitives");
 
-    eventQueue = al_create_event_queue();
-    if (!eventQueue)
+    *eventQueue = al_create_event_queue();
+    if (!*eventQueue)
     {
         fprintf(stderr, "Falha ao criar fila de eventos.\n");
-        al_destroy_display(janela);
+        al_destroy_display(*janela);
         return -1;
     }
 
@@ -73,7 +89,8 @@ bool initialize(ALLEGRO_DISPLAY *janela, ALLEGRO_EVENT_QUEUE *eventQueue){
         //return -1;
         exit(-1);
     }
-    printf("j3anela = null: %d\n", janela == NULL );
+
+    //printf("j3anela = null: %d\n", *janela == NULL );
 
     return true;
 }
