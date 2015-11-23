@@ -96,6 +96,20 @@ bool initialize(ALLEGRO_DISPLAY **janela, ALLEGRO_EVENT_QUEUE **eventQueue){
 }
 
 void drawScenario(){
-    al_draw_line(0.0, 100.0, 640.0, 100.0, al_map_rgb(255,0,0), 1.0 );
+//    int i;
+
+    //al_draw_line(0.0, 100.0, 640.0, 100.0, al_map_rgb(255,0,0), 1.0 );
+
+    al_draw_filled_rectangle(0.0,0.0, 640.0,450.0, al_map_rgb(117.0,180.0,227.0) );  //sky
+    al_draw_filled_circle( 0.0,0.0, 50.0, al_map_rgb(255,255,0)  ); //sun
+    al_draw_filled_triangle( 50.0,350, 100.0,350.0, 75.0,300.0, al_map_rgb(38,27,27) ); // house roof
+    al_draw_filled_rectangle( 50.0,350.0, 100.0, 450.0, al_map_rgb(0.0,0.0,255.0) ); //house base
+    al_draw_filled_rectangle( 0.0,450.0, 640.0,480.0, al_map_rgb(2,61,12)  ); //floor
+
     al_flip_display();
 }
+
+/** things to do            **
+**  create control structs  **
+*   ease house              **
+*****************************/
